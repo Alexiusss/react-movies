@@ -14,12 +14,12 @@ class App extends React.Component {
         count: 0,
     }
 
-    handleClick = () => {
-       //this.setState({count: this.state.count + 1});
-       
-       this.setState((prevState) => ({count: prevState.count + 1}), () => {
-        console.log('sestStateComlete', this.state.count);
-       });
+    handleIncrement = () => {
+       this.setState({count: this.state.count + 1});
+    }
+
+    handleDecrement = () => {
+       this.setState({count: this.state.count - 1});
     }
 
     render() {
@@ -28,7 +28,9 @@ class App extends React.Component {
                 <header className="App-header">
                     <p>Hello from React!</p>
 
-                    <button onClick={this.handleClick}>{this.state.count}</button>
+                    <button onClick={this.handleIncrement}>+</button>
+                    <button>{this.state.count}</button>
+                    <button onClick={this.handleDecrement}>-</button>
                 </header>
             </div>
         );
