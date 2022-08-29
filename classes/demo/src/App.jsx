@@ -1,50 +1,62 @@
 import React from "react";
 
 class App extends React.Component {
-    // Obsolete approach
-    // constructor(props) {
-    //     super(props);
-    //     this.state = {
-    //         count: 0,
-    //     };
-    // }
-
-    // Modern approach
     state = {
-        posts: [],
-        loading: true,
-        comments: [],
+        timer: 0,
+        isCounted: false,
     };
 
     componentDidMount() {
-        console.log("componentDidMount");
-        fetch("https://jsonplaceholder.typicode.com/posts")
-            .then((response) => response.json())
-            .then((data) => this.setState({ posts: data, loading: false }));
-
-        this.timerId = setTimeout(() => {
-            fetch("https://jsonplaceholder.typicode.com/comments")
-                .then((response) => response.json())
-                .then((data) => this.setState({ comments: data }));
-        }, 3000);
+        if (localStorage.getItem("timer") != null) {
+            this.setState({ timer: parseInt(localStorage.getItem("timer")) });
+        } else {
+            this.resetCounter();
+        }
     }
 
     componentDidUpdate() {
-        console.log("componentDidUpdate");
+        if (this.state.isCounted) {
+            this.timerId = setTimeout(() => {
+                let innerTimer = this.state.timer + 1;
+                this.setState({ timer: innerTimer });
+                localStorage.setItem("timer", innerTimer);
+            }, 1000);
+        }
     }
 
     componentWillUnmount() {
         clearInterval(this.timerId);
     }
 
+    startCount = () => {
+        this.setState({ isCounted: true });
+    };
+
+    stopCount = () => {
+        clearInterval(this.timerId);
+    };
+
+    resetCounter = () => {
+        this.setState({ timer: 0, isCounted: false });
+        localStorage.setItem("timer", 0);
+    };
+
     render() {
         return (
             <div className="App">
-                {this.state.loading ? (
-                    <h3>Loading</h3>
+                <h1>React timer</h1>
+                {this.state.timer}
+                <br />
+                {!this.state.isCounted ? (
+                    <button id="startButton" onClick={this.startCount}>
+                        Start
+                    </button>
                 ) : (
-                    <h3>{this.state.posts.length} was loaded</h3>
+                    <button id="stopButton" onClick={this.stopCount}>
+                        Stop
+                    </button>
                 )}
+                <button onClick={this.resetCounter}>Reset</button>
             </div>
         );
     }
