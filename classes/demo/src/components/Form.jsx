@@ -2,12 +2,8 @@ import React from "react";
 
 class Form extends React.Component {
     state = {
-        firstName: "",
         email: "",
-        message: "",
-        select: "",
-        subscription: false,
-        gender: "",
+        terms: false,
     };
 
     handleChange = (event) => {
@@ -18,12 +14,6 @@ class Form extends React.Component {
         this.setState({ [e.target.name]: e.target.checked });
     };
 
-    validateName = () => {
-        if (this.state.firstName.length < 5) {
-            alert("Your first name can`t be less than 5 characters long.");
-        }
-    };
-
     validateEmail = () => {
         if (
             !/^[a-zA-Z0-9.!#$%&`*+/=?^_`{|}~-]+@[a-zA-Z0-0-]+(?:\.[a-zA-Z0-9-]+)*$/.test(
@@ -31,75 +21,58 @@ class Form extends React.Component {
             )
         ) {
             alert("Please enter a valid email address.");
+            return false;
+        }
+        return true;
+    };
+
+    validateCheckbox = () => {
+        if (!this.state.terms) {
+            alert("You should accept all terms.");
+            return false;
+        }
+        return true;
+    };
+
+    cleanForm = () => {
+        this.setState({ email: "" });
+        this.setState({ terms: false });
+    };
+
+    subscribe = () => {
+        let isEmailValid = this.validateEmail();
+        let isCheckboxValid = this.validateCheckbox();
+
+        if (isEmailValid && isCheckboxValid) {
+            alert("Congratulations! You have successfully subscribed!");
+            this.cleanForm();
         }
     };
 
     render() {
-        const { firstName, email, message, select, subscription, gender } =
-            this.state;
+        const { email, terms } = this.state;
 
         return (
             <div>
-                <input
-                    type="text"
-                    name="firstName"
-                    placeholder="Enter your first name"
-                    value={firstName}
-                    onChange={this.handleChange}
-                    onBlur={this.validateName}
-                />
                 <input
                     type="email"
                     name="email"
                     placeholder="Enter your first email address"
                     value={email}
                     onChange={this.handleChange}
-                    onBlur={this.validateEmail}
                 />
-                <br />
-                <textarea
-                    name="message"
-                    value={message}
-                    onChange={this.handleChange}
-                />
-                <br />
-                <select
-                    name="select"
-                    value={select}
-                    onChange={this.handleChange}
-                >
-                    <option value="" disabled></option>
-                    <option value="1">1</option>
-                    <option value="2">2</option>
-                    <option value="3">3</option>
-                </select>
                 <br />
                 <label>
                     <input
                         type="checkbox"
-                        name="subscription"
-                        checked={subscription}
+                        name="terms"
+                        checked={terms}
                         onChange={this.handleCheckboxChange}
                     />
-                    Subscription
+                    I agree with terms and conditions
                 </label>
                 <br />
-                <input
-                    type="radio"
-                    name="gender"
-                    value="male"
-                    onChange={this.handleChange}
-                    checked={gender === "male"}
-                />{" "}
-                Male
-                <input
-                    type="radio"
-                    name="gender"
-                    value="female"
-                    onChange={this.handleChange}
-                    checked={gender === "female"}
-                />{" "}
-                Female
+                <button onClick={this.subscribe}>Send</button>
             </div>
         );
     }
