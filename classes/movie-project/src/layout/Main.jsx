@@ -1,7 +1,9 @@
+import { MovieList } from "../components/MovieList";
 function Main() {
     return (
-        <main container className="content">
+        <main className="container content">
             Hello from Movies App
+            <MovieList />
         </main>
     );
 }
