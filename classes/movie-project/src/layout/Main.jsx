@@ -14,11 +14,17 @@ class Main extends React.Component {
             .then((data) => this.setState({ movies: data.Search }));
     }
 
+    searchMovies = (str) => {
+        fetch(`https://www.omdbapi.com/?apikey=cae4a354&s=${str}`)
+            .then((response) => response.json())
+            .then((data) => this.setState({ movies: data.Search }));
+    };
+
     render() {
         const { movies } = this.state;
         return (
             <main className="container content">
-                <Search />
+                <Search searchMovies={this.searchMovies} />
                 {movies.length ? (
                     <Movies movies={this.state.movies} />
                 ) : (
